@@ -12,12 +12,15 @@ def create_video(image_path, audio_path, output_path):
             .set_audio(audio)
         )
 
-        video.write_videofile(
-            str(output_path),
-            fps=30,
-            codec="libx264",
-            audio_codec="aac"
-        )
+        try:
+            video.write_videofile(
+                str(output_path),
+                fps=30,
+                codec="libx264",
+                audio_codec="aac"
+            )
+        finally:
+            video.close()
 
 if __name__ == "__main__":
     print("Hidden America 2030 Video Generator")
