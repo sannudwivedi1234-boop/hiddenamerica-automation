@@ -1,4 +1,10 @@
 import random
+import asyncio
+from pathlib import Path
+import edge_tts
+
+OUTPUT_DIR = Path("output")
+OUTPUT_DIR.mkdir(exist_ok=True)
 
 USA_FACTS = [
     {
@@ -20,15 +26,25 @@ USA_FACTS = [
     }
 ]
 
+async def create_voice(text, output_path):
+    voice = edge_tts.Communicate(
+        text,
+        voice="en-US-GuyNeural"
+    )
+    await voice.save(str(output_path))
 
 def generate_script():
     fact = random.choice(USA_FACTS)
 
     print("TITLE:", fact["title"])
-    print("\nSCRIPT:", fact["script"])
+    print("SCRIPT:", fact["script"])
+
+    audio_path = OUTPUT_DIR / "voiceover.mp3"
+    asyncio.run(create_voice(fact["script"], audio_path))
+
+    print("VOICEOVER SAVED:", audio_path)
 
     return fact
-
 
 if __name__ == "__main__":
     generate_script()
