@@ -26,5 +26,41 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate USA Facts script
+      - name: Generate USA Facts script and voiceover
         run: python script_generator.py
+
+      - name: Generate video
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw
+          from video_generator import create_video
+
+          output = Path("output")
+          output.mkdir(exist_ok=True)
+
+          audio = output / "voiceover.mp3"
+          image = output / "background.png"
+          video = output / "hidden_america.mp4"
+
+          if not audio.exists():
+              raise FileNotFoundError("Voiceover audio was not created")
+
+          canvas = Image.new("RGB", (1080, 1920), "#10243a")
+          draw = ImageDraw.Draw(canvas)
+          draw.text((80, 700), "HIDDEN AMERICA 2030",
+                    fill="white", stroke_width=1)
+          draw.text((80, 800), "USA FACTS",
+                    fill="white", stroke_width=1)
+          canvas.save(image)
+
+          create_video(image, audio, video)
+          print(f"VIDEO CREATED: {video}")
+          PY
+
+      - name: Save generated files
+        uses: actions/upload-artifact@v4
+        with:
+          name: hidden-america-video
+          path: output/
+          if-no-files-found: error
