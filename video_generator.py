@@ -1,5 +1,6 @@
 from pathlib import Path
 from moviepy import AudioFileClip, ImageClip
+
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
@@ -7,8 +8,8 @@ def create_video(image_path, audio_path, output_path):
     with AudioFileClip(str(audio_path)) as audio:
         video = (
             ImageClip(str(image_path))
-            .set_duration(audio.duration)
-            .set_audio(audio)
+            .with_duration(audio.duration)
+            .with_audio(audio)
         )
 
         try:
