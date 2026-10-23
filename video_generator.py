@@ -1,6 +1,5 @@
 from pathlib import Path
-from moviepy.editor import AudioFileClip, ImageClip
-
+from moviepy import AudioFileClip, ImageClip
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
